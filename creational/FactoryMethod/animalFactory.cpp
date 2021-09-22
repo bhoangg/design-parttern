@@ -18,7 +18,6 @@ public:
 class Dog : public Animal {
 public:
     Dog(){
-        cout << "Buy a dog!!!" << '\n';
     };
     void sound(){
         cout << "woof!!" << '\n';
@@ -28,7 +27,6 @@ public:
 class Cat : public Animal {
 public:
     Cat(){
-        cout << "Buy a cat!!!" << '\n';
     };
     void sound(){
         cout << "meow!!" << '\n';
@@ -38,7 +36,6 @@ public:
 class Duck : public Animal {
 public:
     Duck(){
-        cout << "Buy a duck!!!" << '\n';
     };
     void sound(){
         cout << "quack!!" << '\n';
@@ -51,16 +48,19 @@ Animal* animalFactory(int type){
         case DOG:
         {
             animal = new Dog;
+            cout << "Buy a dog!!!" << '\n';
             break;
         }
         case CAT:
         {
             animal = new Cat;
+            cout << "Buy a cat!!!" << '\n';
             break;
         }
         case DUCK:
         {
             animal = new Duck;
+            cout << "Buy a duck!!!" << '\n';
             break;
         }
         default :
