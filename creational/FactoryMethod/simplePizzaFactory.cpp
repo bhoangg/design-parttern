@@ -58,13 +58,13 @@ public:
 
 class PizzaStore{
 public:
-    PizzaStore(SimplePizzaFactory f){
+    PizzaStore(SimplePizzaFactory* f){
         factory = f;
     } 
     Pizza* orderPizza(int type){
         Pizza* pizza;
 
-        pizza = factory.createPizza(type);
+        pizza = factory->createPizza(type);
         if(pizza==nullptr)
         {
             cout << "Can't order this pizza. Please check again!!!" << endl;
@@ -79,12 +79,12 @@ public:
         return pizza;
     }
 private:
-    SimplePizzaFactory factory;
+    SimplePizzaFactory* factory;
 };
 
 int main (int argc, char* argv[]){
     SimplePizzaFactory pizzaFactory;
-    PizzaStore pizzaStore(pizzaFactory);
+    PizzaStore pizzaStore(&pizzaFactory);
 
     pizzaStore.orderPizza(CHEESE);
 
