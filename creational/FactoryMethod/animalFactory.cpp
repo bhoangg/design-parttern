@@ -1,5 +1,6 @@
 #include<iostream>
 #include<vector>
+#include <memory>
 
 using namespace std;
 
@@ -19,7 +20,7 @@ class Dog : public Animal {
 public:
     Dog(){
     };
-    void sound(){
+    virtual void sound(){
         cout << "woof!!" << '\n';
     }
 };
@@ -28,7 +29,7 @@ class Cat : public Animal {
 public:
     Cat(){
     };
-    void sound(){
+    virtual void sound(){
         cout << "meow!!" << '\n';
     }
 };
@@ -37,55 +38,66 @@ class Duck : public Animal {
 public:
     Duck(){
     };
-    void sound(){
+    virtual void sound(){
         cout << "quack!!" << '\n';
     }
 };
 
-Animal* animalFactory(int type){
-    Animal* animal;
-    switch (type) {
-        case DOG:
-        {
-            animal = new Dog;
-            cout << "Buy a dog!!!" << '\n';
-            break;
+class AnimalFactory{
+public:
+    unique_ptr<Animal> createAnimal(int type){
+        Animal* animal;
+        switch (type) {
+            case DOG:
+            {
+                animal = new Dog;
+                cout << "Buy a dog!!!" << '\n';
+                break;
+            }
+            case CAT:
+            {
+                animal = new Cat;
+                cout << "Buy a cat!!!" << '\n';
+                break;
+            }
+            case DUCK:
+            {
+                animal = new Duck;
+                cout << "Buy a duck!!!" << '\n';
+                break;
+            }
+            default :
+            {
+                cout << "Unknown type!!!" << endl;
+                break;
+            }
         }
-        case CAT:
-        {
-            animal = new Cat;
-            cout << "Buy a cat!!!" << '\n';
-            break;
-        }
-        case DUCK:
-        {
-            animal = new Duck;
-            cout << "Buy a duck!!!" << '\n';
-            break;
-        }
-        default :
-        {
-            cout << "Unknown type!!!" << endl;
-            animal = nullptr;
-            break;
-        }
+        return unique_ptr<Animal>(animal);
     }
-    return animal;
-}
+};
 
-typedef vector<Animal*> LIST_Animal;
+typedef vector<shared_ptr<Animal>> LIST_Animal;
 
 class McDonald{
 public:
     McDonald(){
     }
     void buyAnimal(int type){
-        Animal* animal = animalFactory(type);
-        if(animal)
+        shared_ptr<Animal> animal = factory.createAnimal(type);
+        // cout << animal.use_count() << endl;
+        if(animal.use_count())
             m_animal.push_back(animal);
+    }
+
+    void test(){
+        for(auto it : m_animal){
+            // cout << it.use_count() << endl;
+            it->sound();
+        }
     }
 private:
     LIST_Animal m_animal;
+    AnimalFactory factory;
 };
 
 int main(int argc, char* argv[]){
@@ -94,6 +106,8 @@ int main(int argc, char* argv[]){
      mc.buyAnimal(DOG);
      mc.buyAnimal(CAT);
      mc.buyAnimal(DUCK);
+
+     mc.test();
 
      return 0;
 }
